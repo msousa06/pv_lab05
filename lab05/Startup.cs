@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using lab05.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace lab05
 {
@@ -22,6 +24,9 @@ namespace lab05
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=TopCarDB;
+            Trusted_Connection=True;";
+            services.AddDbContext<TopCarContext>(options =>options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
