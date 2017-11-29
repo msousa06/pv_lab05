@@ -19,14 +19,21 @@ namespace lab05.Controllers
         }
 
         // GET: Carroes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String id)
         {
-            var topCarContext = _context.Carros.Include(c => c.Marca);
-            return View(await topCarContext.ToListAsync());
+            var carros = from m in _context.Carros
+                          select m;
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                carros = carros.Where(s => s.Modelo == id);
+            }
+            return View(await carros.ToListAsync());
+
         }
 
         // GET: Carroes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [ActionName("Detalhes")]public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -41,14 +48,14 @@ namespace lab05.Controllers
                 return NotFound();
             }
 
-            return View(carro);
+            return View("Details",carro);
         }
 
         // GET: Carroes/Create
-        public IActionResult Create()
+        [ActionName("Criar")]public IActionResult Create()
         {
             ViewData["MarcaId"] = new SelectList(_context.Marcas, "MarcaId", "MarcaId");
-            return View();
+            return View("Create");
         }
 
         // POST: Carroes/Create
@@ -56,6 +63,7 @@ namespace lab05.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ActionName("Criar")]
         public async Task<IActionResult> Create([Bind("CarroId,Modelo,NumeroDePassageiros,NumeroDePortas,EmissoesCO2,TipoCaixa,MarcaId")] Carro carro)
         {
             if (ModelState.IsValid)
@@ -65,10 +73,11 @@ namespace lab05.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MarcaId"] = new SelectList(_context.Marcas, "MarcaId", "MarcaId", carro.MarcaId);
-            return View(carro);
+            return View("Create",carro);
         }
 
         // GET: Carroes/Edit/5
+        [ActionName("Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,13 +91,14 @@ namespace lab05.Controllers
                 return NotFound();
             }
             ViewData["MarcaId"] = new SelectList(_context.Marcas, "MarcaId", "MarcaId", carro.MarcaId);
-            return View(carro);
+            return View("Edit",carro);
         }
 
         // POST: Carroes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [ActionName("Editar")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CarroId,Modelo,NumeroDePassageiros,NumeroDePortas,EmissoesCO2,TipoCaixa,MarcaId")] Carro carro)
         {
@@ -118,10 +128,11 @@ namespace lab05.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["MarcaId"] = new SelectList(_context.Marcas, "MarcaId", "MarcaId", carro.MarcaId);
-            return View(carro);
+            return View("Edit",carro);
         }
 
         // GET: Carroes/Delete/5
+        [ActionName("Apagar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,11 +148,11 @@ namespace lab05.Controllers
                 return NotFound();
             }
 
-            return View(carro);
+            return View("Delete",carro);
         }
 
         // POST: Carroes/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

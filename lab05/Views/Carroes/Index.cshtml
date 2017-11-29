@@ -7,7 +7,7 @@
 <h2>Carros</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Criar">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -28,7 +28,7 @@
                     @Html.DisplayNameFor(model => model.TipoCaixa)
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.Marca)
+                @Html.DisplayNameFor(model => model.Marca.Designacao)
             </th>
             <th></th>
         </tr>
@@ -52,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.TipoCaixa)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Marca.MarcaId)
+                @Html.DisplayFor(modelItem => item.Marca.Designacao)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CarroId">Edit</a> |
